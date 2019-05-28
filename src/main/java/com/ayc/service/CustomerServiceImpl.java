@@ -1,0 +1,47 @@
+package com.ayc.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.ayc.api.v1.mapper.CustomerMapper;
+import com.ayc.api.v1.model.CustomerDTO;
+import com.ayc.repositories.CustomerRepository;
+
+@Service
+public class CustomerServiceImpl implements CustomerService{
+	
+	CustomerRepository customerRepository;
+	CustomerMapper customerMapper;
+	
+	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+		this.customerRepository = customerRepository;
+		this.customerMapper = customerMapper;
+	}
+	
+	@Override
+	public List<CustomerDTO> getAllCustomers() {
+		return customerRepository.findAll()
+		.stream()
+		.map(customer -> {
+			CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
+			customerDTO.setCustomerUrl("/api/v1/customer/" + customer.getId());
+			return customerDTO;
+		})
+		.collect(Collectors.toList());
+	}
+
+	@Override
+	public CustomerDTO getCustomerById(Long id) {
+		return customerRepository.findById(id)
+		.map(customerMapper::customerToCustomerDTO)
+		.orElseThrow(RuntimeException::new);
+	}
+
+	@Override
+	public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

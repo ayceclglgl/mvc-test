@@ -1,0 +1,73 @@
+package com.ayc.controller.v1;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyLong;
+
+import com.ayc.api.v1.model.CustomerDTO;
+import com.ayc.service.CustomerService;
+
+public class CustomerControllerTest {
+	
+	@InjectMocks
+	CustomerController controller;
+	
+	@Mock
+	CustomerService service;
+	
+	MockMvc mvc;
+	
+	private static final Long ID = 1L; 
+	private static final String FIRST_NAME = "FIRST_NAME"; 
+	@Before
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+		
+		mvc = MockMvcBuilders.standaloneSetup(controller).build();
+	}
+	
+	@Test
+	public void testGetAllCustomers() throws Exception {
+		List<CustomerDTO> list = Arrays.asList(new CustomerDTO(), new CustomerDTO());
+		when(service.getAllCustomers()).thenReturn(list);
+		
+		mvc.perform(get("/api/v1/customers/")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.customers", hasSize(2))); //$ means root
+		
+	}
+	
+	@Test
+	public void testGetCustomerByID() throws Exception {
+		CustomerDTO cDto = new CustomerDTO();
+		cDto.setFirstName(FIRST_NAME);
+		
+		when(service.getCustomerById(anyLong())).thenReturn(cDto);
+		
+		mvc.perform(get("/api/v1/customers/" + ID)
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));
+		
+	}
+	
+
+}
