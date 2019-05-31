@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -101,6 +102,33 @@ public class CustomerServiceTest {
 		assertEquals(NAME, updatedCustomerDTO.getFirstName());
 		assertEquals(CUSTOMER_URL_PREFIX + id, updatedCustomerDTO.getCustomerUrl());
 		
+	}
+	
+	@Test
+	public void testPatchCustomer(){
+		String updatedFirstName = NAME + "patch";
+		Customer customer = new Customer();
+		customer.setFirstName(NAME);
+		
+		Customer updatedCustomer = new Customer();
+		updatedCustomer.setFirstName(updatedFirstName);
+		
+		CustomerDTO customerDTO = new CustomerDTO();
+		customerDTO.setFirstName(updatedFirstName);
+		
+		when(repository.findById(any())).thenReturn(Optional.of(customer));
+		when(repository.save(any())).thenReturn(updatedCustomer);
+		
+		CustomerDTO patchCustomerDTO = service.updateCustomerByDTO(id, customerDTO);
+		
+		assertNotNull(patchCustomerDTO);
+		assertEquals(updatedFirstName, patchCustomerDTO.getFirstName());
+	}
+	
+	@Test
+	public void testDeleteCustomer() {
+		service.deleteCustomerById(anyLong());
+		verify(repository).deleteById(anyLong());
 	}
 
 }
