@@ -1,7 +1,12 @@
 package com.ayc.controller.v1;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -17,14 +22,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.anyLong;
-
 import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.service.CustomerService;
 
-public class CustomerControllerTest {
+public class CustomerControllerTest extends AbstractRestController{
 	
 	@InjectMocks
 	CustomerController controller;
@@ -69,5 +70,34 @@ public class CustomerControllerTest {
 		
 	}
 	
+	@Test
+	public void testCreateNewCustomer() throws Exception{
+		CustomerDTO cDto = new CustomerDTO();
+		cDto.setFirstName(FIRST_NAME);
+		cDto.setId(ID);
+		
+		when(service.createNewCustomer(cDto)).thenReturn(cDto);
+		
+		mvc.perform(post("/api/v1/customers")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(cDto)))
+		.andExpect(status().isCreated())
+		.andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));
+	}
+	
+	@Test
+	public void testUpdateCustomer() throws Exception{
+		CustomerDTO cDto = new CustomerDTO();
+		cDto.setFirstName(FIRST_NAME);
+		cDto.setId(ID);
+		
+		when(service.updateCustomerByDTO(ID, cDto)).thenReturn(cDto);
+		
+		mvc.perform(put("/api/v1/customers/" + ID)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(cDto)))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));
+	}
 
 }

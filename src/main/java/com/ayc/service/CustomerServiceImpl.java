@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ayc.api.v1.mapper.CustomerMapper;
 import com.ayc.api.v1.model.CustomerDTO;
+import com.ayc.domain.Customer;
 import com.ayc.repositories.CustomerRepository;
 
 @Service
@@ -14,6 +15,7 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	CustomerRepository customerRepository;
 	CustomerMapper customerMapper;
+	private final static String CUSTOMER_URL_PREFIX = "/api/v1/customer/";
 	
 	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
 		this.customerRepository = customerRepository;
@@ -26,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService{
 		.stream()
 		.map(customer -> {
 			CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-			customerDTO.setCustomerUrl("/api/v1/customer/" + customer.getId());
+			customerDTO.setCustomerUrl(CUSTOMER_URL_PREFIX + customer.getId());
 			return customerDTO;
 		})
 		.collect(Collectors.toList());
@@ -41,7 +43,20 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
-		// TODO Auto-generated method stub
-		return null;
+		return saveCustomer(customerMapper.customerDTOToCustomer(customerDTO));
+	}
+
+	@Override
+	public CustomerDTO updateCustomerByDTO(Long id, CustomerDTO customerDTO) {
+		Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
+		customer.setId(id);
+		return saveCustomer(customer);
+	}
+	
+	private CustomerDTO saveCustomer(Customer customer) {
+		Customer savedCustomer = customerRepository.save(customer);
+		CustomerDTO returnedDTO = customerMapper.customerToCustomerDTO(savedCustomer);
+		returnedDTO.setCustomerUrl(CUSTOMER_URL_PREFIX + savedCustomer.getId());
+		return returnedDTO;
 	}
 }

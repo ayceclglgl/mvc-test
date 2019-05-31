@@ -5,6 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ayc.api.v1.model.CustomerDTO;
@@ -12,7 +15,7 @@ import com.ayc.api.v1.model.CustomerListDTO;
 import com.ayc.service.CustomerService;
 
 @Controller
-@RequestMapping("/api/v1/customers/")
+@RequestMapping("/api/v1/customers")
 public class CustomerController {
 
 	CustomerService customerService;
@@ -27,13 +30,21 @@ public class CustomerController {
 				new CustomerListDTO(customerService.getAllCustomers()), HttpStatus.OK);
 	}
 	
-	@GetMapping("{id}")
-	public ResponseEntity<CustomerDTO> getCustomerByID(@PathVariable("id") String id){
-		Long customerId = Long.valueOf(id);
-		
+	@GetMapping("/{id}")
+	public ResponseEntity<CustomerDTO> getCustomerByID(@PathVariable("id") Long id){
 		return new ResponseEntity<CustomerDTO>(
-				customerService.getCustomerById(customerId), HttpStatus.OK);
+				customerService.getCustomerById(id), HttpStatus.OK);
 	}
 	
+	@PostMapping
+	public ResponseEntity<CustomerDTO> createNewCustomer(@RequestBody CustomerDTO customerDTO){
+		return new ResponseEntity<CustomerDTO>(customerService.createNewCustomer(customerDTO), 
+				HttpStatus.CREATED);
+	}
 	
+	@PutMapping("/{id}")
+	public ResponseEntity<CustomerDTO> updateNewCustomer(@PathVariable("id") Long id, @RequestBody CustomerDTO customerDTO){
+		return new ResponseEntity<CustomerDTO>(customerService.updateCustomerByDTO(id, customerDTO), 
+				HttpStatus.OK);
+	}
 }
