@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ayc.api.v1.mapper.CustomerMapper;
 import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.domain.Customer;
+import com.ayc.exception.ResourceNotFoundException;
 import com.ayc.repositories.CustomerRepository;
 
 @Service
@@ -28,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService{
 		.stream()
 		.map(customer -> {
 			CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-			customerDTO.setCustomerUrl(CUSTOMER_URL_PREFIX + customer.getId());
+			customerDTO.setCustomerUrl(getCustomerUrl(customer.getId()));
 			return customerDTO;
 		})
 		.collect(Collectors.toList());
@@ -39,10 +40,10 @@ public class CustomerServiceImpl implements CustomerService{
 		return customerRepository.findById(id)
 		.map(customerMapper::customerToCustomerDTO)
 		.map(customerDTO -> {
-			 customerDTO.setCustomerUrl(CUSTOMER_URL_PREFIX + id);
+			 customerDTO.setCustomerUrl(getCustomerUrl(id));
              return customerDTO;
 		})
-		.orElseThrow(RuntimeException::new);
+		.orElseThrow(ResourceNotFoundException::new);
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService{
 	private CustomerDTO saveCustomer(Customer customer) {
 		Customer savedCustomer = customerRepository.save(customer);
 		CustomerDTO returnedDTO = customerMapper.customerToCustomerDTO(savedCustomer);
-		returnedDTO.setCustomerUrl(CUSTOMER_URL_PREFIX + savedCustomer.getId());
+		returnedDTO.setCustomerUrl(getCustomerUrl(savedCustomer.getId()));
 		return returnedDTO;
 	}
 
@@ -77,15 +78,19 @@ public class CustomerServiceImpl implements CustomerService{
 			}
 
 			CustomerDTO patchCustomerDTO = customerMapper.customerToCustomerDTO(customerRepository.save(customer));
-			patchCustomerDTO.setCustomerUrl(CUSTOMER_URL_PREFIX + id);
+			patchCustomerDTO.setCustomerUrl(getCustomerUrl(id));
 			
 			return patchCustomerDTO;
-		}).orElseThrow(RuntimeException::new);
+		}).orElseThrow(ResourceNotFoundException::new);
 
 	}
 	
 	@Override
 	public void deleteCustomerById(Long id) {
 		customerRepository.deleteById(id);
+	}
+	
+	private String getCustomerUrl(Long id) {
+		return CUSTOMER_URL_PREFIX  + id;
 	}
 }

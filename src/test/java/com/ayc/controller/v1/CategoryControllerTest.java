@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ayc.api.v1.model.CategoryDTO;
+import com.ayc.controller.RestResponseEntityExceptionHandler;
+import com.ayc.exception.ResourceNotFoundException;
 import com.ayc.service.CategoryService;
 
 
@@ -39,7 +41,9 @@ public class CategoryControllerTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		mvc = MockMvcBuilders.standaloneSetup(controller).build();
+		mvc = MockMvcBuilders.standaloneSetup(controller)
+				.setControllerAdvice(RestResponseEntityExceptionHandler.class)
+				.build();
 	}
 	
 	@Test
@@ -65,6 +69,17 @@ public class CategoryControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.name", equalTo(NAME)));
+	}
+	
+	@Test
+	public void testGetByNameNotFound() throws Exception {
+		String notFound = "notFound";
+		
+		when(service.getCategoryByName(anyString())).thenThrow(ResourceNotFoundException.class);
+		
+		mvc.perform(get("/api/v1/categories/" + notFound)
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isNotFound());
 	}
 	
 

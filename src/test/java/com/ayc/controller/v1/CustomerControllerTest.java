@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ayc.api.v1.model.CustomerDTO;
+import com.ayc.controller.RestResponseEntityExceptionHandler;
+import com.ayc.exception.ResourceNotFoundException;
 import com.ayc.service.CustomerService;
 
 public class CustomerControllerTest extends AbstractRestController{
@@ -44,7 +46,9 @@ public class CustomerControllerTest extends AbstractRestController{
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		
-		mvc = MockMvcBuilders.standaloneSetup(controller).build();
+		mvc = MockMvcBuilders.standaloneSetup(controller)
+				.setControllerAdvice(RestResponseEntityExceptionHandler.class)
+				.build();
 	}
 	
 	@Test
@@ -128,5 +132,13 @@ public class CustomerControllerTest extends AbstractRestController{
 		verify(service).deleteCustomerById(anyLong());
 	}
 
+	@Test
+	public void testNotFoundException() throws Exception {
+		when(service.getCustomerById(anyLong())).thenThrow(ResourceNotFoundException.class);
+		
+		mvc.perform(get("/api/v1/customers/" + ID)
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isNotFound());
+	}
 
 }
