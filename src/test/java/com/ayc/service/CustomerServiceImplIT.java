@@ -21,6 +21,7 @@ import com.ayc.bootstrap.Bootstrap;
 import com.ayc.domain.Customer;
 import com.ayc.repositories.CategoryRepository;
 import com.ayc.repositories.CustomerRepository;
+import com.ayc.repositories.VendorRepository;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -29,13 +30,15 @@ public class CustomerServiceImplIT {
 	CategoryRepository categoryRepository;
 	@Autowired
 	CustomerRepository customerRepository;
+	@Autowired
+	VendorRepository vendorRepository;
 	
 	CustomerService service;
 	
 	@Before
 	public void setUp() throws Exception {
 		
-		Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository);
+		Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, vendorRepository);
 		bootstrap.run();
 		
 		service = new CustomerServiceImpl(customerRepository, CustomerMapper.INSTANCE);
