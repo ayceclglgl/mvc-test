@@ -10,7 +10,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfiguration {
+public class SwaggerConfiguration { //} extends WebMvcConfigurationSupport { // Use when project is not Spring Boot
 	
 	@Bean
 	public Docket api() {
@@ -20,5 +20,15 @@ public class SwaggerConfiguration {
 				.build()
 				.pathMapping("/");
 	}
+	
+//  Use when project is not Spring Boot
+//  @Override
+//  protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+//      registry.addResourceHandler("swagger-ui.html")
+//              .addResourceLocations("classpath:/META-INF/resources/");
+//
+//      registry.addResourceHandler("/webjars/**")
+//              .addResourceLocations("classpath:/META-INF/resources/webjars/");
+//  }
 
 }
