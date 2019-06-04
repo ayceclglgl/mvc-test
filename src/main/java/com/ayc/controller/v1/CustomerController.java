@@ -16,6 +16,10 @@ import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.api.v1.model.CustomerListDTO;
 import com.ayc.service.CustomerService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
@@ -26,6 +30,7 @@ public class CustomerController {
 		this.customerService = customerService;
 	}
 	
+	@ApiOperation(value = "This will get a list of customers", notes = "These are notes about API.")
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public CustomerListDTO getAllCustomers(){
