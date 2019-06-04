@@ -16,6 +16,10 @@ import com.ayc.api.v1.model.VendorDTO;
 import com.ayc.api.v1.model.VendorDTOList;
 import com.ayc.service.VendorService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api
 @RestController
 @RequestMapping(VendorController.BASE_URL)
 public class VendorController {
@@ -33,6 +37,7 @@ public class VendorController {
 		return new VendorDTOList(vendorService.getVendors());
 	}
 	
+	@ApiOperation(value = "This method get a vendor via id")
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public VendorDTO getVendor(@PathVariable("id") Long id) {
