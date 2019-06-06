@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayc.api.v1.model.CustomerDTO;
-import com.ayc.api.v1.model.CustomerListDTO;
+import com.ayc.model.CustomerDTO;
+import com.ayc.model.CustomerListDTO;
 import com.ayc.service.CustomerService;
 
 import io.swagger.annotations.Api;
@@ -34,7 +34,9 @@ public class CustomerController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public CustomerListDTO getAllCustomers(){
-		return new CustomerListDTO(customerService.getAllCustomers());
+		CustomerListDTO customerListDTO = new CustomerListDTO();
+		customerListDTO.getCustomers().addAll(customerService.getAllCustomers());
+		return customerListDTO;
 	}
 	
 	@GetMapping("/{id}")

@@ -2,7 +2,8 @@ package com.ayc.service;
 
 import java.util.List;
 
-import com.ayc.api.v1.model.CustomerDTO;
+import com.ayc.model.CustomerDTO;
+
 
 public interface CustomerService {
 	List<CustomerDTO> getAllCustomers();

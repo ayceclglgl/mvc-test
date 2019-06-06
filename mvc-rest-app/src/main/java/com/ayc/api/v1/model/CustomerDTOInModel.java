@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class CustomerDTO {
+public class CustomerDTOInModel {
 	private Long id;
 	
 	@ApiModelProperty(value= "This is the first name", required=true)

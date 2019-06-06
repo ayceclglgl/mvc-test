@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerListDTO {
-	List<CustomerDTO> customers;
+public class CustomerListDTOInModel {
+	List<CustomerDTOInModel> customers;
 }

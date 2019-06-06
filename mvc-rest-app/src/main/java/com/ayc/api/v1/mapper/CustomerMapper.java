@@ -3,8 +3,8 @@ package com.ayc.api.v1.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.domain.Customer;
+import com.ayc.model.CustomerDTO;
 
 @Mapper
 public interface CustomerMapper {

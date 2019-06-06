@@ -25,9 +25,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.controller.RestResponseEntityExceptionHandler;
 import com.ayc.exception.ResourceNotFoundException;
+import com.ayc.model.CustomerDTO;
 import com.ayc.service.CustomerService;
 
 public class CustomerControllerTest extends AbstractRestController{
@@ -81,7 +81,6 @@ public class CustomerControllerTest extends AbstractRestController{
 	public void testCreateNewCustomer() throws Exception{
 		CustomerDTO cDto = new CustomerDTO();
 		cDto.setFirstName(FIRST_NAME);
-		cDto.setId(ID);
 		
 		when(service.createNewCustomer(cDto)).thenReturn(cDto);
 		
@@ -96,7 +95,6 @@ public class CustomerControllerTest extends AbstractRestController{
 	public void testUpdateCustomer() throws Exception{
 		CustomerDTO cDto = new CustomerDTO();
 		cDto.setFirstName(FIRST_NAME);
-		cDto.setId(ID);
 		
 		when(service.updateCustomerByDTO(ID, cDto)).thenReturn(cDto);
 		
@@ -112,7 +110,6 @@ public class CustomerControllerTest extends AbstractRestController{
 	public void testPatchCustomer() throws Exception{
 		CustomerDTO cDto = new CustomerDTO();
 		cDto.setFirstName(FIRST_NAME);
-		cDto.setId(ID);
 		
 		when(service.patchCustomer(ID, cDto)).thenReturn(cDto);
 		

@@ -5,8 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.domain.Customer;
+import com.ayc.model.CustomerDTO;
 
 public class CustomerMapperTest {
 
@@ -26,7 +26,6 @@ public class CustomerMapperTest {
 		CustomerDTO customerDTO = mapper.customerToCustomerDTO(customer);
 		
 		assertNotNull(customerDTO);
-		assertEquals(Long.valueOf(id), customerDTO.getId());
 		assertEquals(FIRST_NAME, customerDTO.getFirstName());
 		assertEquals(LAST_NAME, customerDTO.getLastName());
 	}
@@ -34,7 +33,6 @@ public class CustomerMapperTest {
 	@Test
 	public void customerDTOToCustomerTest() {
 		CustomerDTO customerDTO = new CustomerDTO();
-		customerDTO.setId(id);
 		customerDTO.setFirstName(FIRST_NAME);
 		customerDTO.setLastName(LAST_NAME);
 		

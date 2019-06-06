@@ -17,8 +17,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.ayc.api.v1.mapper.CustomerMapper;
-import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.domain.Customer;
+import com.ayc.model.CustomerDTO;
 import com.ayc.repositories.CustomerRepository;
 
 
@@ -60,7 +60,6 @@ public class CustomerServiceTest {
 		
 		CustomerDTO customerDTO = service.getCustomerById(anyLong());
 		assertNotNull(customerDTO);
-		assertEquals(Long.valueOf(id), customerDTO.getId());
 		assertEquals(NAME, customerDTO.getFirstName());
 	
 	}
@@ -69,7 +68,6 @@ public class CustomerServiceTest {
 	public void testCreateNewCustomer() {
 		CustomerDTO customerDTO = new CustomerDTO();
 		customerDTO.setFirstName(NAME);
-		customerDTO.setId(id);
 		
 		Customer customer = new Customer();
 		customer.setFirstName(NAME);
@@ -79,7 +77,6 @@ public class CustomerServiceTest {
 		CustomerDTO savedCustomerDTO = service.createNewCustomer(customerDTO);
 		
 		assertNotNull(savedCustomerDTO);
-		assertEquals(Long.valueOf(id), savedCustomerDTO.getId());
 		assertEquals(NAME, savedCustomerDTO.getFirstName());
 		assertEquals(CUSTOMER_URL_PREFIX + id, savedCustomerDTO.getCustomerUrl());
 	}
@@ -88,7 +85,6 @@ public class CustomerServiceTest {
 	public void testUpdateCustomerByDTO(){
 		CustomerDTO customerDTO = new CustomerDTO();
 		customerDTO.setFirstName(NAME);
-		customerDTO.setId(id);
 		
 		Customer customer = new Customer();
 		customer.setFirstName(NAME);
@@ -98,7 +94,6 @@ public class CustomerServiceTest {
 		CustomerDTO updatedCustomerDTO = service.updateCustomerByDTO(id, customerDTO);
 		
 		assertNotNull(updatedCustomerDTO);
-		assertEquals(Long.valueOf(id), updatedCustomerDTO.getId());
 		assertEquals(NAME, updatedCustomerDTO.getFirstName());
 		assertEquals(CUSTOMER_URL_PREFIX + id, updatedCustomerDTO.getCustomerUrl());
 		

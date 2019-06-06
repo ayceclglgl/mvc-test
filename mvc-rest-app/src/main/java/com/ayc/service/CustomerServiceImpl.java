@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.ayc.api.v1.mapper.CustomerMapper;
-import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.domain.Customer;
 import com.ayc.exception.ResourceNotFoundException;
+import com.ayc.model.CustomerDTO;
 import com.ayc.repositories.CustomerRepository;
 
 @Service

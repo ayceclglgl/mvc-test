@@ -16,9 +16,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ayc.api.v1.mapper.CustomerMapper;
-import com.ayc.api.v1.model.CustomerDTO;
 import com.ayc.bootstrap.Bootstrap;
 import com.ayc.domain.Customer;
+import com.ayc.model.CustomerDTO;
 import com.ayc.repositories.CategoryRepository;
 import com.ayc.repositories.CustomerRepository;
 import com.ayc.repositories.VendorRepository;
@@ -54,7 +54,6 @@ public class CustomerServiceImplIT {
 		 String originalLastName = customerOriginal.getLastName();
 		 
 		 CustomerDTO customerDTO = new CustomerDTO();
-		 customerDTO.setId(id);
 		 customerDTO.setFirstName(updatedFirstName);
 		 
 		service.patchCustomer(id, customerDTO);
