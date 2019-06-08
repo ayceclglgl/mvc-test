@@ -12,14 +12,12 @@ public class CustomerMapperTest {
 
 	CustomerMapper mapper = CustomerMapper.INSTANCE;
 	
-	private static long id = 1L;
 	private static String FIRST_NAME = "first name";
 	private static String LAST_NAME = "last name";
 	
 	@Test
 	public void customerToCustomerDTOTest() {
 		Customer customer = new Customer();
-		customer.setId(id);
 		customer.setFirstName(FIRST_NAME);
 		customer.setLastName(LAST_NAME);
 		
@@ -39,7 +37,6 @@ public class CustomerMapperTest {
 		Customer customer = mapper.customerDTOToCustomer(customerDTO);
 		
 		assertNotNull(customer);
-		assertEquals(Long.valueOf(id), customer.getId());
 		assertEquals(FIRST_NAME, customer.getFirstName());
 		assertEquals(LAST_NAME, customer.getLastName());
 	}

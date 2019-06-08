@@ -13,20 +13,17 @@ public class CategoryMapperTest {
 	
 	CategoryMapper mapper = CategoryMapper.INSTANCE;
 	
-	private static long id = 1L;
 	private static String NAME = "Name";
 	
 	@Test
 	public void categoryToCategoryDTOTest() {
 		Category category = new Category();
-		category.setId(id);
 		category.setName(NAME);
 		
 		
 		CategoryDTO cDto = mapper.categoryToCategoryDTO(category);
 		
 		assertNotNull(cDto);
-		assertEquals(Long.valueOf(id), cDto.getId());
 		assertEquals(NAME, cDto.getName());
 	}
 

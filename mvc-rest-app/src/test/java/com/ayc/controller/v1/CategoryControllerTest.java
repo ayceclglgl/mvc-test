@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
+import javax.print.attribute.standard.Media;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ayc.api.v1.model.CategoryDTO;
@@ -52,8 +55,9 @@ public class CategoryControllerTest {
 		when(service.getAllCategories()).thenReturn(catList);
 		
 		
-		mvc.perform(get("/api/v1/categories/")
-				.contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/api/v1/categories")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.categories", hasSize(2))); //$ means root
 	}
@@ -66,8 +70,10 @@ public class CategoryControllerTest {
 		when(service.getCategoryByName(anyString())).thenReturn(cDto);
 		
 		mvc.perform(get("/api/v1/categories/" + NAME)
-				.contentType(MediaType.APPLICATION_JSON))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())
+		.andDo(MockMvcResultHandlers.print()) // Print the response result
 		.andExpect(jsonPath("$.name", equalTo(NAME)));
 	}
 	

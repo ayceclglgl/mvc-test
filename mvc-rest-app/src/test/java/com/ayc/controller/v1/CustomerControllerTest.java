@@ -3,6 +3,7 @@ package com.ayc.controller.v1;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -21,8 +22,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityRequestMatcherProviderAutoConfiguration.MvcRequestMatcherConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ayc.controller.RestResponseEntityExceptionHandler;
@@ -57,7 +60,8 @@ public class CustomerControllerTest extends AbstractRestController{
 		when(service.getAllCustomers()).thenReturn(list);
 		
 		mvc.perform(get("/api/v1/customers/")
-				.contentType(MediaType.APPLICATION_JSON))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.customers", hasSize(2))); //$ means root
 		
@@ -71,9 +75,14 @@ public class CustomerControllerTest extends AbstractRestController{
 		when(service.getCustomerById(anyLong())).thenReturn(cDto);
 		
 		mvc.perform(get("/api/v1/customers/" + ID)
-				.contentType(MediaType.APPLICATION_JSON))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));
+		//.andDo(MockMvcResultHandlers.print())
+		.andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME))); /* Default option is application/xml
+																   and we get java.lang.AssertionError: No value at JSON path "$.firstName" ....
+																   Thus add ".accept(MediaType.APPLICATION_JSON)" 
+																   If you want to print the response result use; .andDo(MockMvcResultHandlers.print())*/
 		
 	}
 	
@@ -82,12 +91,14 @@ public class CustomerControllerTest extends AbstractRestController{
 		CustomerDTO cDto = new CustomerDTO();
 		cDto.setFirstName(FIRST_NAME);
 		
-		when(service.createNewCustomer(cDto)).thenReturn(cDto);
+		when(service.createNewCustomer(any())).thenReturn(cDto);
 		
 		mvc.perform(post("/api/v1/customers")
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(asJsonString(cDto)))
 		.andExpect(status().isCreated())
+		.andDo(MockMvcResultHandlers.print())
 		.andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));
 	}
 	
@@ -96,10 +107,11 @@ public class CustomerControllerTest extends AbstractRestController{
 		CustomerDTO cDto = new CustomerDTO();
 		cDto.setFirstName(FIRST_NAME);
 		
-		when(service.updateCustomerByDTO(ID, cDto)).thenReturn(cDto);
+		when(service.updateCustomerByDTO(anyLong(), any())).thenReturn(cDto);
 		
 		mvc.perform(put("/api/v1/customers/" + ID)
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(asJsonString(cDto)))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));
@@ -111,10 +123,11 @@ public class CustomerControllerTest extends AbstractRestController{
 		CustomerDTO cDto = new CustomerDTO();
 		cDto.setFirstName(FIRST_NAME);
 		
-		when(service.patchCustomer(ID, cDto)).thenReturn(cDto);
+		when(service.patchCustomer(anyLong(), any())).thenReturn(cDto);
 		
 		mvc.perform(patch("/api/v1/customers/" + ID)
 				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
 				.content(asJsonString(cDto)))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));

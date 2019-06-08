@@ -12,7 +12,7 @@ import com.ayc.api.v1.model.CategoryListDTO;
 import com.ayc.service.CategoryService;
 
 @RestController
-@RequestMapping("/api/v1/categories/")
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
 	
 	CategoryService categoryService;
@@ -27,7 +27,7 @@ public class CategoryController {
 		return new CategoryListDTO(categoryService.getAllCategories());
 	}
 	
-	@GetMapping("{name}")
+	@GetMapping("/{name}")
 	@ResponseStatus(HttpStatus.OK)
 	public CategoryDTO getCategoryByName(@PathVariable("name") String name){
 		return categoryService.getCategoryByName(name);
